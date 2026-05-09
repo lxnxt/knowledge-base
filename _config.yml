@@ -1,8 +1,5 @@
 title: 知识库
 description: 个人知识积累与分享
 theme: minima
-plugins:
-  - jekyll-seo-tag
-  - jekyll-feed
 markdown: kramdown
 show_excerpts: true
