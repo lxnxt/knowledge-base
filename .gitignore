@@ -1,0 +1,6 @@
+.obsidian/
+.obsidian.json
+.obsidian.vault.json
+.trash/
+*.log
+.DS_Store
