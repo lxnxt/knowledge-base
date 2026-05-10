@@ -256,13 +256,6 @@
         <div class="card-tag">{{ article.tag }}</div>
       </div>
       <p class="card-desc">{{ article.desc }}</p>
-      {% if article.has_ppt and article.asset %}
-      <div class="ppt-strip">
-        <a href="{{ article.asset }}" target="_blank">
-          <img src="{{ article.asset }}" alt="配图">
-        </a>
-      </div>
-      {% endif %}
       <div class="card-footer">
         <span class="card-link">阅读全文 →</span>
       </div>

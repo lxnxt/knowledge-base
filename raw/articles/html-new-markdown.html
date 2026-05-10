@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML 会成为新的 Markdown 吗？</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    background: #f8f6f1;
+    color: #333;
+    line-height: 1.8;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+  .meta { font-size: 14px; color: #888; margin-bottom: 8px; }
+  h1 { font-size: 28px; color: #1a1a1a; margin-bottom: 20px; line-height: 1.3; }
+  h2 { font-size: 20px; color: #2a2a2a; margin: 32px 0 14px; border-left: 4px solid #ff9a9e; padding-left: 12px; }
+  h3 { font-size: 16px; color: #444; margin: 20px 0 10px; }
+  p { margin-bottom: 16px; color: #333; }
+  blockquote {
+    background: #fff5f5;
+    border-left: 4px solid #ff9a9e;
+    padding: 14px 18px;
+    margin: 20px 0;
+    border-radius: 0 8px 8px 0;
+    color: #555;
+  }
+  blockquote p { margin: 0; }
+  ul, ol { margin: 12px 0 16px 24px; }
+  li { margin-bottom: 8px; }
+  .highlight { background: #fff5f5; padding: 2px 6px; border-radius: 4px; }
+  .tag { display: inline-block; background: #ff9a9e; color: #fff; font-size: 12px; padding: 2px 10px; border-radius: 12px; margin-right: 8px; }
+  .info-box {
+    background: linear-gradient(135deg, #fff5f5, #fff0f0);
+    border: 1px solid #ffd0d0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 20px 0;
+  }
+  .info-box strong { color: #d44; }
+  code { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; font-size: 14px; }
+  hr { border: none; border-top: 1px dashed #e0e0e0; margin: 32px 0; }
+  .footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid #e0e0e0; font-size: 13px; color: #999; }
+</style>
+</head>
+<body>
+
+<div class="meta">2026-05-10 · AGI Hunt · <span class="tag">开发工具</span></div>
+<h1>HTML 会成为新的 Markdown 吗？</h1>
+
+<div class="info-box">
+<strong>TL;DR：</strong>Claude Code 工程师 Thariq 提出"HTML 是新的 Markdown"——用 AI 生成结构化 HTML，比长 Markdown 文档更易于阅读和分享。
+</div>
+
+<h2>文档越来越长，越来越难读</h2>
+
+<p>作者的习惯：给 AI 一次口喷 10 分钟数千字，让 AI 完善想法。最终产出的文档可能有 <span class="highlight">300-1000 行</span>。</p>
+
+<p>作者更倾向于让 AI 一次性完成较大的任务，减少与 AI 沟通的频率，减少自己在其中 loop 的次数。</p>
+
+<h3>买菜 vs AI coding 的往返对比</h3>
+
+<p>去菜市场买菜，你会一次性买齐所有东西回家，减少路上的时间。</p>
+
+<p>在 AI coding 中，"路上的时间"就是 AI 说"我干完了，你来看看"后，你需要一次又一次对这些小任务进行的多次检查验收。</p>
+
+<h3>核心痛点</h3>
+
+<ul>
+  <li>大文档接手的同事不会一行一行看</li>
+  <li>要么直接扔给 AI 分析开干</li>
+  <li>更希望有人在方案环节就进行 review，而不是完成后再发现初始方案的问题</li>
+  <li>AI 产出的文档容易前后矛盾</li>
+</ul>
+
+<h2>Thariq Shihipar 是谁</h2>
+
+<ul>
+  <li>MIT Media Lab 硕士毕业</li>
+  <li>YC W20 创业者</li>
+  <li>创办过融资 1700 万美元的游戏公司</li>
+  <li>卖掉过 SaaS 产品</li>
+  <li>一年多前加入 Anthropic，all in Claude Code</li>
+  <li>贡献：设计了「ask user question」工具</li>
+</ul>
+
+<blockquote>
+<p>"HTML is the new markdown. I've stopped writing markdown files for almost everything and switched to using Claude Code to generate HTML for me."</p>
+<p>—— Thariq Shihipar，Anthropic Claude Code 团队</p>
+</blockquote>
+
+<h2>HTML vs Markdown 的核心差异</h2>
+
+<p>同样的内容，不同的交付：</p>
+
+<ul>
+  <li><strong>Markdown：</strong>240 行，底部写着「还有 214 行」，需要滚动阅读</li>
+  <li><strong>HTML：</strong>有 tab 切换、有数据图表、有关键指标高亮，扫一眼就能抓住重点</li>
+</ul>
+
+<p><span class="highlight">一个是让你滚动阅读的文档，一个是让你扫一眼就能抓住重点的页面。</span></p>
+
+<h2>HTML 的优势</h2>
+
+<h3>信息密度更高</h3>
+<p>HTML 能承载的信息类型比 Markdown 丰富太多——图表、指标高亮、交互元素。</p>
+
+<h3>更适合阅读</h3>
+<p>一个让你滚动阅读，一个让你扫一眼就能抓住重点。</p>
+
+<h3>分享门槛低</h3>
+<p>Claude Code 可以直接生成可直接分享的 HTML 页面。</p>
+
+<h3>双向互动</h3>
+<p>HTML 支持交互，Markdown 只能静态呈现。</p>
+
+<hr>
+
+<h2>结论</h2>
+
+<p>AI 时代，<span class="highlight">精炼的语言、更少的 token 来表达同样的内容</span>，是更重要的技能。</p>
+
+<p>HTML 作为载体，比 Markdown 更适合 AI 时代的信息传递——而 Claude Code 让生成 HTML 变得和写 Markdown 一样简单。</p>
+
+<div class="footer">
+  来源：<a href="https://mp.weixin.qq.com/s/7RP2BtB3Eqmkqs1daD4cSA">AGI Hunt · 《HTML 会成为新的 Markdown 吗？》</a>
+</div>
+
+</body>
+</html>
