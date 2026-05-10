@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{ page.title }}</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+    background: #0a0a0f;
+    color: #e0e0e0;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* Hero Section */
+  .hero {
+    background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
+    padding: 80px 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(88, 166, 255, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 80%, rgba(138, 100, 255, 0.06) 0%, transparent 50%);
+    pointer-events: none;
+  }
+  .hero-icon { font-size: 48px; margin-bottom: 20px; }
+  .hero h1 {
+    font-size: 42px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+    position: relative;
+  }
+  .hero-tagline {
+    font-size: 18px;
+    color: rgba(255,255,255,0.5);
+    max-width: 480px;
+    margin: 0 auto 32px;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    position: relative;
+  }
+  .stat { text-align: center; }
+  .stat-num { font-size: 28px; font-weight: 700; color: #58a6ff; }
+  .stat-label { font-size: 13px; color: rgba(255,255,255,0.4); margin-top: 4px; }
+
+  /* Main content */
+  .main { max-width: 900px; margin: 0 auto; padding: 60px 20px; }
+
+  /* Section titles */
+  .section-title {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.3);
+    margin-bottom: 28px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  /* Article cards */
+  .articles { display: flex; flex-direction: column; gap: 16px; }
+
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 16px;
+    padding: 28px 32px;
+    transition: all 0.25s ease;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, #58a6ff, #8b5cf6);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .card:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.12);
+    transform: translateX(4px);
+    text-decoration: none;
+  }
+  .card:hover::before { opacity: 1; }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 10px;
+  }
+  .card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.4;
+  }
+  .card-tag {
+    font-size: 11px;
+    background: rgba(88,166,255,0.12);
+    color: #58a6ff;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    border: 1px solid rgba(88,166,255,0.2);
+  }
+  .card-desc {
+    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.6;
+    margin: 0;
+  }
+  .card-arrow {
+    color: rgba(255,255,255,0.15);
+    font-size: 18px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .card:hover .card-arrow {
+    color: #58a6ff;
+    transform: translateX(4px);
+  }
+
+  /* About section */
+  .about {
+    margin-top: 64px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 32px;
+  }
+  .about h2 {
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .about p {
+    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+    line-height: 1.8;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: rgba(255,255,255,0.2);
+    font-size: 13px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    margin-top: 40px;
+  }
+  footer a { color: rgba(255,255,255,0.3); text-decoration: none; }
+  footer a:hover { color: #58a6ff; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    .hero { padding: 50px 20px; }
+    .hero h1 { font-size: 28px; }
+    .hero-stats { gap: 24px; }
+    .stat-num { font-size: 22px; }
+    .card { padding: 20px; }
+    .card-title { font-size: 16px; }
+    .card-header { flex-direction: column; gap: 8px; }
+    .card-arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-icon">🧠</div>
+  <h1>知识库</h1>
+  <p class="hero-tagline">记录学习、沉淀知识、积累成长<br>Obsidian + GitHub Pages 个人知识库</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">3</div>
+      <div class="stat-label">篇文章</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">AI</div>
+      <div class="stat-label">主要领域</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">持续更新</div>
+    </div>
+  </div>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <div class="section-title">最近更新</div>
+
+  <div class="articles">
+    <a class="card" href="/knowledge-base/raw/articles/dexter-financial-claude-code.html">
+      <div class="card-header">
+        <div class="card-title">金融界的 Claude Code 来了</div>
+        <div class="card-tag">AI Agent</div>
+        <span class="card-arrow">→</span>
+      </div>
+      <p class="card-desc">GitHub 23.5K Star 的金融 AI Agent，专攻金融研究，三层架构 + SOUL.md 投资哲学，拒绝幻觉。</p>
+    </a>
+
+    <a class="card" href="/knowledge-base/raw/articles/scrapling-wechat.html">
+      <div class="card-header">
+        <div class="card-title">爬虫天花板！网站改版不用改代码</div>
+        <div class="card-tag">爬虫</div>
+        <span class="card-arrow">→</span>
+      </div>
+      <p class="card-desc">scrapling：AI 驱动的自愈型爬虫，网站改版无需修改代码，隐身反爬，提取速度比 BS4 快 784 倍。</p>
+    </a>
+
+    <a class="card" href="/knowledge-base/raw/articles/worldmodel-meta.html">
+      <div class="card-header">
+        <div class="card-title">Meta 发布"世界模型"：AI 终于有了想象力</div>
+        <div class="card-tag">世界模型</div>
+        <span class="card-arrow">→</span>
+      </div>
+      <p class="card-desc">Meta 的 AI 世界模型进展，AI 具备空间推理和想象能力，意味着什么？</p>
+    </a>
+  </div>
+
+  <div class="about">
+    <h2>关于这个知识库</h2>
+    <p>基于 Obsidian + GitHub Pages 构建，文章通过Hermes Agent自动归档。涵盖 AI Agent、编程技术、工具效率等领域的学习笔记与深度分析。</p>
+  </div>
+</div>
+
+<footer>
+  <a href="https://github.com/lxnxt/knowledge-base">GitHub</a> · 知识库 · {{ site.time | date: "%Y" }}
+</footer>
+
+</body>
+</html>
