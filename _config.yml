@@ -4,13 +4,7 @@ theme: minima
 markdown: kramdown
 show_excerpts: true
 
-# raw 目录下的文件不是 Jekyll 页面，不进入导航
+# 只排除无关文件，raw 目录正常输出
 exclude:
-  - raw
   - _posts
   - ".base"
-
-# 手动指定导航页
-minima:
-  nav_pages:
-    - path: index.md
