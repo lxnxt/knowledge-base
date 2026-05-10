@@ -1,0 +1,35 @@
+[
+  {
+    "slug": "dexter-financial-claude-code",
+    "title": "金融界的 Claude Code 来了",
+    "desc": "GitHub 23.5K Star 的金融 AI Agent，专攻金融研究，三层架构 + SOUL.md 投资哲学，拒绝幻觉。",
+    "tag": "AI Agent",
+    "icon": "💰",
+    "icon_bg": "pink",
+    "href": "/knowledge-base/raw/articles/dexter-financial-claude-code.html",
+    "asset": "/knowledge-base/raw/assets/dexter-ppt-contact.png",
+    "has_ppt": true
+  },
+  {
+    "slug": "scrapling-wechat",
+    "title": "爬虫天花板！网站改版不用改代码",
+    "desc": "scrapling：AI 驱动的自愈型爬虫，网站改版无需修改代码，隐身反爬，提取速度比 BS4 快 784 倍。",
+    "tag": "爬虫",
+    "icon": "🕸️",
+    "icon_bg": "green",
+    "href": "/knowledge-base/raw/articles/scrapling-wechat.html",
+    "asset": null,
+    "has_ppt": false
+  },
+  {
+    "slug": "worldmodel-meta",
+    "title": "Meta 发布 世界模型：AI 终于有了想象力",
+    "desc": "Meta 的 AI 世界模型进展，AI 具备空间推理和想象能力，意味着什么？",
+    "tag": "世界模型",
+    "icon": "💡",
+    "icon_bg": "blue",
+    "href": "/knowledge-base/raw/articles/worldmodel-meta.html",
+    "asset": null,
+    "has_ppt": false
+  }
+]

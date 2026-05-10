@@ -165,6 +165,32 @@
   }
   .card:hover .card-link { color: #ff6b6b; }
 
+  /* PPT preview strip */
+  .ppt-strip {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+  .ppt-strip a {
+    display: block;
+    width: 80px;
+    height: 45px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #f0e0e0;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .ppt-strip a:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .ppt-strip img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
   /* About */
   .about {
     margin-top: 48px;
@@ -222,41 +248,27 @@
 
   <div class="cards">
 
-    <a class="card" href="/knowledge-base/raw/articles/dexter-financial-claude-code.html">
+{% assign sorted_articles = site.data.articles | sort: 'slug' | reverse %}
+{% for article in sorted_articles %}
+    <a class="card" href="{{ article.href }}">
       <div class="card-top">
-        <div class="card-icon pink">💰</div>
-        <div class="card-title">金融界的 Claude Code 来了</div>
-        <div class="card-tag">AI Agent</div>
+        <div class="card-icon {{ article.icon_bg }}">{{ article.icon }}</div>
+        <div class="card-title">{{ article.title }}</div>
+        <div class="card-tag">{{ article.tag }}</div>
       </div>
-      <p class="card-desc">GitHub 23.5K Star 的金融 AI Agent，专攻金融研究，三层架构 + SOUL.md 投资哲学，拒绝幻觉。</p>
+      <p class="card-desc">{{ article.desc }}</p>
+      {% if article.has_ppt and article.asset %}
+      <div class="ppt-strip">
+        <a href="{{ article.asset }}" target="_blank">
+          <img src="{{ article.asset }}" alt="配图">
+        </a>
+      </div>
+      {% endif %}
       <div class="card-footer">
         <span class="card-link">阅读全文 →</span>
       </div>
     </a>
-
-    <a class="card" href="/knowledge-base/raw/articles/scrapling-wechat.html">
-      <div class="card-top">
-        <div class="card-icon green">🕸️</div>
-        <div class="card-title">爬虫天花板！网站改版不用改代码</div>
-        <div class="card-tag">爬虫</div>
-      </div>
-      <p class="card-desc">scrapling：AI 驱动的自愈型爬虫，网站改版无需修改代码，隐身反爬，提取速度比 BS4 快 784 倍。</p>
-      <div class="card-footer">
-        <span class="card-link">阅读全文 →</span>
-      </div>
-    </a>
-
-    <a class="card" href="/knowledge-base/raw/articles/worldmodel-meta.html">
-      <div class="card-top">
-        <div class="card-icon blue">💡</div>
-        <div class="card-title">Meta 发布"世界模型"：AI 终于有了想象力</div>
-        <div class="card-tag">世界模型</div>
-      </div>
-      <p class="card-desc">Meta 的 AI 世界模型进展，AI 具备空间推理和想象能力，意味着什么？</p>
-      <div class="card-footer">
-        <span class="card-link">阅读全文 →</span>
-      </div>
-    </a>
+{% endfor %}
 
   </div>
 
