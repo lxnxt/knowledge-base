@@ -248,8 +248,7 @@
 
   <div class="cards">
 
-{% assign sorted_articles = site.data.articles | sort: 'slug' | reverse %}
-{% for article in sorted_articles %}
+{% for article in site.data.articles %}
     <a class="card" href="{{ article.href }}">
       <div class="card-top">
         <div class="card-icon {{ article.icon_bg }}">{{ article.icon }}</div>
