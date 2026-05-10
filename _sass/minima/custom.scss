@@ -1,0 +1,48 @@
+// Custom overrides for minima theme
+
+// Navigation: allow links to wrap nicely
+.site-nav {
+  .trigger {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 0;
+  }
+
+  .page-link {
+    color: #111;
+    line-height: 1.5;
+    padding: 2px 8px;
+    border-radius: 4px;
+
+    &:not(:last-child) {
+      margin-right: 0;
+    }
+
+    &:hover {
+      background-color: #f0f0f0;
+      text-decoration: none;
+    }
+  }
+}
+
+// Mobile nav: stack vertically
+@media screen and (max-width: 600px) {
+  .site-nav .trigger {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+
+    .page-link {
+      display: block;
+      padding: 5px 10px;
+      margin-left: 0;
+      width: 100%;
+    }
+  }
+
+  .site-nav input:checked ~ .trigger {
+    display: flex;
+  }
+}

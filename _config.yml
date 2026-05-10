@@ -3,3 +3,14 @@ description: 个人知识积累与分享
 theme: minima
 markdown: kramdown
 show_excerpts: true
+
+# raw 目录下的文件不是 Jekyll 页面，不进入导航
+exclude:
+  - raw
+  - _posts
+  - ".base"
+
+# 手动指定导航页
+minima:
+  nav_pages:
+    - path: index.md

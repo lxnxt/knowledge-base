@@ -9,7 +9,9 @@ title: 知识库
 
 ## 最近更新
 
-暂无文章
+- [金融界的 Claude Code 来了](/knowledge-base/raw/articles/dexter-financial-claude-code.html) — GitHub 23.5K Star 的金融 AI Agent，专攻金融研究的 Agent 架构设计
+- [爬虫天花板！网站改版不用改代码！智能自愈+隐身反爬，网页提取比BS4快784倍](/knowledge-base/raw/articles/scrapling-wechat.html) — scrapling：AI驱动的自愈型爬虫，网站改版无需修改代码
+- [Meta发布"世界模型"：AI终于有了想象力，这意味着什么？](/knowledge-base/raw/articles/worldmodel-meta.html) — Meta 的 AI 世界模型进展，AI 具备空间推理和想象能力
 
 ## 关于
 
