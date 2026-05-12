@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>姚金刚提示词合集 yao-open-prompts — 1.8k Star 中文 AI 提示词库</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card-bg: #161b22;
+      --card-hover: #1c2128;
+      --accent: #f0883e;
+      --accent2: #a371f7;
+      --text: #c9d1d9;
+      --text-muted: #8b949e;
+      --border: #30363d;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.8;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 6rem;
+    }
+
+    /* 阅读进度条 */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      width: 0%;
+      z-index: 100;
+      transition: width 0.1s;
+    }
+
+    /* 回到顶部 */
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 44px;
+      height: 44px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s, transform 0.2s;
+      font-size: 1.2rem;
+    }
+    .back-to-top.visible { opacity: 1; }
+    .back-to-top:hover { transform: translateY(-2px); background: var(--card-hover); }
+
+    /* 导航点 */
+    .nav-dots {
+      position: fixed;
+      right: 1.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 50;
+    }
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .nav-dot.active { background: var(--accent); transform: scale(1.3); }
+    .nav-dot:hover { background: var(--accent2); }
+    .nav-dot::before {
+      content: attr(data-label);
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .nav-dot:hover::before { opacity: 1; }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 3rem 0 2.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2.5rem;
+    }
+    .hero h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .stat {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 1.2rem;
+      text-align: center;
+    }
+    .stat .num {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .stat .label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* 标签 */
+    .tag-row {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .tag {
+      background: rgba(240,136,62,0.12);
+      border: 1px solid rgba(240,136,62,0.3);
+      color: var(--accent);
+      font-size: 0.72rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    /* 引用 */
+    blockquote {
+      border-left: 3px solid var(--accent);
+      margin: 1.5rem 0;
+      padding: 0.8rem 1.2rem;
+      background: var(--card-bg);
+      border-radius: 0 6px 6px 0;
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    /* 目录 */
+    .toc {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .toc-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+    }
+    .toc ol {
+      list-style: none;
+      counter-reset: toc;
+    }
+    .toc li {
+      counter-increment: toc;
+      margin: 0.4rem 0;
+      font-size: 0.9rem;
+    }
+    .toc li::before {
+      content: counter(toc) ".";
+      color: var(--accent);
+      font-weight: 600;
+      margin-right: 0.5rem;
+    }
+    .toc a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    .toc a:hover { color: var(--accent2); }
+
+    /* 分类卡片 */
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 10px;
+      margin: 1.5rem 0;
+    }
+    .cat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.9rem 1rem;
+      transition: all 0.2s;
+    }
+    .cat-card:hover {
+      border-color: var(--accent);
+      background: var(--card-hover);
+      transform: translateY(-2px);
+    }
+    .cat-card .cat-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.3rem;
+    }
+    .cat-card .cat-count {
+      font-size: 0.75rem;
+      color: var(--accent);
+    }
+    .cat-card .cat-examples {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+
+    /* 亮点卡片 */
+    .highlight-card {
+      background: linear-gradient(135deg, rgba(240,136,62,0.08), rgba(163,113,247,0.08));
+      border: 1px solid rgba(240,136,62,0.2);
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      margin: 1.5rem 0;
+    }
+    .highlight-card h3 {
+      color: var(--accent);
+      font-size: 0.95rem;
+      margin-bottom: 0.6rem;
+    }
+    .highlight-card ul {
+      list-style: none;
+      font-size: 0.88rem;
+    }
+    .highlight-card li {
+      padding: 0.25rem 0;
+      padding-left: 1rem;
+      position: relative;
+    }
+    .highlight-card li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--accent2);
+    }
+
+    /* 表格 */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.2rem 0;
+      font-size: 0.85rem;
+    }
+    th {
+      background: var(--card-bg);
+      color: var(--accent);
+      font-weight: 600;
+      text-align: left;
+      padding: 0.6rem 0.8rem;
+      border-bottom: 2px solid var(--border);
+    }
+    td {
+      padding: 0.55rem 0.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+    tr:hover td { background: var(--card-bg); }
+
+    /* 代码块 */
+    pre {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      margin: 1rem 0;
+    }
+    code {
+      font-family: "SF Mono", "Fira Code", Consolas, monospace;
+      font-size: 0.85em;
+      color: var(--accent2);
+    }
+    :not(pre) > code {
+      background: rgba(163,113,247,0.12);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+
+    /* footer */
+    .footer-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      text-decoration: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      margin-top: 1.5rem;
+      transition: all 0.2s;
+    }
+    .footer-link:hover {
+      border-color: var(--accent);
+      background: var(--card-hover);
+    }
+
+    /* 图片灯箱 */
+    .lightbox {
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .lightbox:hover { opacity: 0.85; }
+
+    /* 滚动动画 */
+    .reveal {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    @media (max-width: 600px) {
+      .nav-dots { display: none; }
+      .category-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- 导航点 -->
+<nav class="nav-dots" id="navDots">
+  <div class="nav-dot active" data-label="概览" onclick="scrollToSection('overview')"></div>
+  <div class="nav-dot" data-label="分类" onclick="scrollToSection('categories')"></div>
+  <div class="nav-dot" data-label="亮点" onclick="scrollToSection('highlights')"></div>
+  <div class="nav-dot" data-label="结构" onclick="scrollToSection('structure')"></div>
+  <div class="nav-dot" data-label="链接" onclick="scrollToSection('links')"></div>
+</nav>
+
+<!-- 回到顶部 -->
+<div class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</div>
+
+<article>
+  <!-- Hero -->
+  <header class="hero" id="overview">
+    <h1>姚金刚提示词合集</h1>
+    <p class="subtitle">yao-open-prompts — 最完整的中文 AI 提示词开源库</p>
+    <div class="stats">
+      <div class="stat"><div class="num">1.8k</div><div class="label">Star</div></div>
+      <div class="stat"><div class="num">116</div><div class="label">提示词</div></div>
+      <div class="stat"><div class="num">9</div><div class="label">分类</div></div>
+      <div class="stat"><div class="num">CC BY 4.0</div><div class="label">可商用</div></div>
+    </div>
+    <div class="tag-row">
+      <span class="tag">提示词</span>
+      <span class="tag">AI</span>
+      <span class="tag">GEO营销</span>
+      <span class="tag">开源</span>
+      <span class="tag">中文</span>
+    </div>
+  </header>
+
+  <!-- 概览 -->
+  <section class="reveal">
+    <blockquote>
+      面向真实场景的中文 AI 提示词库，116 个提示词覆盖内容创作、营销推广、学习教育、工作效率等九大方向。CC BY 4.0 许可，可商用。
+    </blockquote>
+  </section>
+
+  <!-- 分类 -->
+  <section id="categories" style="margin-top:2.5rem">
+    <h2 style="font-size:1.2rem;margin-bottom:1rem;border-left:3px solid var(--accent);padding-left:0.8rem">9 大分类</h2>
+    <div class="category-grid">
+      <div class="cat-card reveal">
+        <div class="cat-name">AI内容</div>
+        <div class="cat-count">49 个</div>
+        <div class="cat-examples">写作、润色、标题、短视频、PPT</div>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-name">AI营销</div>
+        <div class="cat-count">28 个</div>
+        <div class="cat-examples">GEO营销、SEO、信源建设</div>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-name">AI学习</div>
+        <div class="cat-count">11 个</div>
+        <div class="cat-examples">费曼提问、批判思维、记忆术</div>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-name">AI工作</div>
+        <div class="cat-count">10 个</div>
+        <div class="cat-examples">企业合同、产品原型、网页</div>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-name">AI教育</div>
+        <div class="cat-count">4 个</div>
+        <div class="cat-examples">儿童教育、互动学习页、小游戏</div>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-name">AI方法</div>
+        <div class="cat-count">8 个</div>
+        <div class="cat-examples">元提示词、RTF框架、网页逆向</div>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-name">AI思考</div>
+        <div class="cat-count">3 个</div>
+        <div class="cat-examples">批判思维、记忆、思维类</div>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-name">AI生活</div>
+        <div class="cat-count">2 个</div>
+        <div class="cat-examples">健康、亲子歌曲</div>
+      </div>
+      <div class="cat-card reveal">
+        <div class="cat-name">AI编程</div>
+        <div class="cat-count">1 个</div>
+        <div class="cat-examples">架构设计</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 核心亮点 -->
+  <section id="highlights" style="margin-top:2.5rem">
+    <h2 style="font-size:1.2rem;margin-bottom:1rem;border-left:3px solid var(--accent);padding-left:0.8rem">核心亮点</h2>
+
+    <div class="highlight-card reveal">
+      <h3>智能元提示词系统（最值得研究）</h3>
+      <ul>
+        <li>V0.6 / V0.8 两版，基于 RTF 框架（Role-Task-Format）</li>
+        <li>把需求分析→角色→任务→格式→评估串成完整流程</li>
+        <li>LISP 结构化版本更进阶，适合二次开发</li>
+        <li>用途：生成任何高质量提示词的"起点提示词"</li>
+      </ul>
+    </div>
+
+    <div class="highlight-card reveal">
+      <h3>GEO 营销（当前热点）</h3>
+      <ul>
+        <li>25 个实战模板，AI 搜索优化（Generative Engine Optimization）</li>
+        <li>覆盖：机会判断、内容工程、信源建设、数据监测、增长诊断</li>
+      </ul>
+    </div>
+
+    <div class="highlight-card reveal">
+      <h3>内容与运营（最大类，49 个）</h3>
+      <ul>
+        <li>短视频文案、钩子开场、高互动文案</li>
+        <li>公众号 HTML 排版</li>
+        <li>B站UP主、抖音爆款策划</li>
+        <li>评论区运营、数据复盘诊断</li>
+        <li>各行业内容专家（教育、穿搭、健身、美食、家居）</li>
+      </ul>
+    </div>
+
+    <div class="highlight-card reveal">
+      <h3>学习方法（费曼 + 康奈尔 + 西蒙）</h3>
+      <ul>
+        <li>费曼学习法、康奈尔笔记、番茄学习法、西蒙学习法、SQ3R阅读法</li>
+        <li>超级记忆术、学习助理提示词</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 目录结构 -->
+  <section id="structure" style="margin-top:2.5rem">
+    <h2 style="font-size:1.2rem;margin-bottom:1rem;border-left:3px solid var(--accent);padding-left:0.8rem">目录结构</h2>
+    <pre><code>yao-open-prompts/
+├── prompts/          # 中文提示词
+├── prompts-en/       # 英文镜像
+└── scripts/          # 目录生成 + 质检脚本</code></pre>
+    <p style="font-size:0.88rem;color:var(--text-muted);margin-top:0.8rem">
+      每个提示词有完整 frontmatter 规范：<code>title</code>、<code>category</code>、<code>author</code>、<code>version</code>、<code>status</code>、<code>tags</code>。
+    </p>
+  </section>
+
+  <!-- 链接 -->
+  <section id="links" style="margin-top:2.5rem">
+    <h2 style="font-size:1.2rem;margin-bottom:1rem;border-left:3px solid var(--accent);padding-left:0.8rem">参考链接</h2>
+    <a class="footer-link" href="https://github.com/yaojingang/yao-open-prompts" target="_blank">
+      <span>📦</span> GitHub — yaojingang/yao-open-prompts
+    </a>
+  </section>
+
+  <div style="margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);color:var(--text-muted);font-size:0.8rem;text-align:center">
+    来源：GitHub · 更新时间：2025-05-12
+  </div>
+</article>
+
+<script>
+  // 进度条
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.body.scrollHeight - window.innerHeight;
+    const pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    document.getElementById('progressBar').style.width = pct + '%';
+
+    // 回到顶部显示
+    document.getElementById('backToTop').classList.toggle('visible', scrollTop > 400);
+
+    // 导航高亮
+    const sections = ['overview','categories','highlights','structure','links'];
+    const offsets = sections.map(id => {
+      const el = document.getElementById(id);
+      return { id, offset: el ? el.offsetTop : 0 };
+    });
+    const scrollMid = scrollTop + window.innerHeight / 2;
+    let active = offsets[0].id;
+    for (const o of offsets) {
+      if (scrollMid >= o.offset - 100) active = o.id;
+    }
+    document.querySelectorAll('.nav-dot').forEach(dot => {
+      dot.classList.toggle('active', dot.getAttribute('data-label').toLowerCase() === active ||
+        (active === 'overview' && dot.getAttribute('data-label') === '概览'));
+    });
+  });
+
+  function scrollToSection(id) {
+    document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // 滚动动画
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // 图片灯箱
+  document.querySelectorAll('img').forEach(img => {
+    img.addEventListener('click', () => {
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.9);display:flex;align-items:center;justify-content:center;z-index:999;cursor:pointer';
+      const imgel = document.createElement('img');
+      imgel.src = img.src;
+      imgel.style.cssText = 'max-width:90vw;max-height:90vh;border-radius:8px';
+      overlay.appendChild(imgel);
+      overlay.addEventListener('click', () => overlay.remove());
+      document.body.appendChild(overlay);
+    });
+  });
+</script>
+</body>
+</html>
