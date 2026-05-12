@@ -49,6 +49,41 @@
     position: relative;
   }
 
+  /* Search bar */
+  .search-wrap {
+    max-width: 880px;
+    margin: -20px auto 0;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+  }
+  .search-box {
+    width: 100%;
+    padding: 14px 20px 14px 48px;
+    font-size: 15px;
+    border: none;
+    border-radius: 50px;
+    background: #fff;
+    color: #5a4a3a;
+    box-shadow: 0 4px 24px rgba(255, 154, 158, 0.25);
+    outline: none;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .search-box::placeholder { color: #c0a890; }
+  .search-box:focus {
+    box-shadow: 0 6px 32px rgba(255, 154, 158, 0.35);
+    transform: translateY(-2px);
+  }
+  .search-icon {
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    pointer-events: none;
+    color: #c0a890;
+  }
+
   /* Main */
   .main { max-width: 880px; margin: 0 auto; padding: 40px 20px; }
 
@@ -71,6 +106,17 @@
     background: linear-gradient(90deg, #ffb6c1, transparent);
     border-radius: 2px;
   }
+
+  /* No results */
+  .no-results {
+    text-align: center;
+    padding: 48px 20px;
+    color: #c0a890;
+    font-size: 15px;
+    display: none;
+  }
+  .no-results.visible { display: block; }
+  .no-results .no-icon { font-size: 48px; margin-bottom: 12px; }
 
   /* Cards */
   .cards { display: flex; flex-direction: column; gap: 20px; }
@@ -103,6 +149,7 @@
     border-color: #ffb6c1;
   }
   .card:hover::before { opacity: 1; }
+  .card.hidden { display: none; }
 
   .card-top {
     display: flex;
@@ -224,6 +271,8 @@
     .card-top { flex-wrap: wrap; }
     .about { flex-direction: column; gap: 12px; }
     .about-icon { font-size: 36px; }
+    .search-wrap { margin-top: -10px; }
+    .search-box { font-size: 14px; padding: 12px 16px 12px 42px; }
   }
 </style>
 </head>
@@ -237,6 +286,12 @@
   <p>记录学习 · 沉淀知识 · 积累成长</p>
 </header>
 
+<!-- Search -->
+<div class="search-wrap">
+  <span class="search-icon">🔍</span>
+  <input class="search-box" type="text" id="searchInput" placeholder="搜索文章标题、标签或关键词…" autocomplete="off" />
+</div>
+
 <!-- Main -->
 <div class="main">
 
@@ -246,10 +301,16 @@
     <div class="section-line"></div>
   </div>
 
-  <div class="cards">
+  <div class="no-results" id="noResults">
+    <div class="no-icon">🔎</div>
+    <div>没有找到匹配的文章</div>
+    <div style="font-size:13px;margin-top:6px;">试试其他关键词</div>
+  </div>
+
+  <div class="cards" id="cardsContainer">
 
 {% for article in site.data.articles %}
-    <a class="card" href="{{ article.href }}">
+    <a class="card" href="{{ article.href }}" data-title="{{ article.title }}" data-tag="{{ article.tag }}" data-desc="{{ article.desc }}">
       <div class="card-top">
         <div class="card-icon {{ article.icon_bg }}">{{ article.icon }}</div>
         <div class="card-title">{{ article.title }}</div>
@@ -277,6 +338,35 @@
 <footer>
   Made with 💖 · Obsidian + GitHub Pages · {{ site.time | date: "%Y" }}
 </footer>
+
+<script>
+(function() {
+  var input = document.getElementById('searchInput');
+  var container = document.getElementById('cardsContainer');
+  var noResults = document.getElementById('noResults');
+  var cards = Array.from(container.querySelectorAll('a.card'));
+
+  function normalize(s) {
+    return (s || '').toLowerCase().replace(/\s/g, '');
+  }
+
+  input.addEventListener('input', function() {
+    var q = normalize(input.value);
+    var count = 0;
+
+    cards.forEach(function(card) {
+      var title = normalize(card.getAttribute('data-title'));
+      var tag = normalize(card.getAttribute('data-tag'));
+      var desc = normalize(card.getAttribute('data-desc'));
+      var match = !q || title.includes(q) || tag.includes(q) || desc.includes(q);
+      card.classList.toggle('hidden', !match);
+      if (match) count++;
+    });
+
+    noResults.classList.toggle('visible', count === 0 && q.length > 0);
+  });
+})();
+</script>
 
 </body>
 </html>
