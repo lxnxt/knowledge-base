@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SenseNova-U1 原生多模态统一架构开源模型</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card-bg: #161b22;
+      --accent: #a855f7;
+      --accent-dim: #7c3aed;
+      --text: #c9d1d9;
+      --text-dim: #8b949e;
+      --border: #30363d;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.8;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 6rem;
+    }
+
+    /* Reading progress bar */
+    .progress-bar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+      width: 0%;
+      z-index: 100;
+      transition: width 0.1s;
+    }
+
+    /* Back to top */
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.3s;
+      z-index: 50;
+    }
+    .back-to-top.visible { display: flex; }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 3rem 1rem;
+      margin-bottom: 3rem;
+      background: linear-gradient(135deg, #1a0a2e 0%, #0d1117 60%, #1a0a2e 100%);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 50%, rgba(168, 85, 247, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .hero h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, #c084fc, #a855f7, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+      position: relative;
+    }
+    .hero .subtitle {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .hero .badges {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+    }
+
+    /* Section */
+    h2 {
+      font-size: 1.25rem;
+      color: #e0d0ff;
+      margin: 2.5rem 0 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Links */
+    .link-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+    .link-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      text-decoration: none;
+      color: var(--accent);
+      font-size: 0.88rem;
+      transition: border-color 0.2s, background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .link-card:hover { border-color: var(--accent); background: #1e1e2e; }
+    .link-card::before { content: '🔗'; }
+
+    /* Architecture cards */
+    .arch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+    .arch-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .arch-card .icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+    .arch-card h3 { font-size: 0.9rem; color: #e0d0ff; margin-bottom: 0.3rem; }
+    .arch-card p { font-size: 0.8rem; color: var(--text-dim); }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.85rem;
+    }
+    th, td {
+      padding: 0.6rem 0.75rem;
+      text-align: left;
+      border: 1px solid var(--border);
+    }
+    th { background: var(--card-bg); color: #e0d0ff; }
+    tr:nth-child(even) { background: rgba(22, 27, 34, 0.5); }
+    td a { color: var(--accent); text-decoration: none; }
+    td a:hover { text-decoration: underline; }
+
+    /* Highlight box */
+    .highlight-box {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(124, 58, 237, 0.05));
+      border: 1px solid rgba(168, 85, 247, 0.3);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin: 1.5rem 0;
+    }
+    .highlight-box h3 {
+      color: #c084fc;
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    .highlight-box ul {
+      list-style: none;
+      display: grid;
+      gap: 0.5rem;
+    }
+    .highlight-box li {
+      padding-left: 1.2rem;
+      position: relative;
+      font-size: 0.88rem;
+    }
+    .highlight-box li::before { content: '✨'; position: absolute; left: 0; }
+
+    /* Capability pills */
+    .cap-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+    .cap-pill {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      text-align: center;
+    }
+    .cap-pill .emoji { font-size: 1.5rem; display: block; margin-bottom: 0.3rem; }
+    .cap-pill .label { font-size: 0.82rem; color: var(--text-dim); }
+
+    /* Image showcase */
+    .img-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+    .img-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      text-align: center;
+    }
+    .img-card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      display: block;
+    }
+    .img-card .caption {
+      padding: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    /* Checklist */
+    .checklist {
+      list-style: none;
+      display: grid;
+      gap: 0.5rem;
+    }
+    .checklist li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+    }
+    .checklist li.done { color: #4ade80; }
+    .checklist li.pending { color: var(--text-dim); }
+    .check-box {
+      width: 18px; height: 18px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      flex-shrink: 0;
+    }
+    .done .check-box { background: #4ade80; border-color: #4ade80; color: #000; }
+    .pending .check-box { background: transparent; }
+
+    /* Footer meta */
+    .meta {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .meta a { color: var(--accent); text-decoration: none; }
+    .meta a:hover { text-decoration: underline; }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+    .lightbox.active { display: flex; }
+    .lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 8px;
+      box-shadow: 0 0 60px rgba(168, 85, 247, 0.3);
+    }
+  </style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- Lightbox for images -->
+<div class="lightbox" id="lightbox" onclick="this.classList.remove('active')">
+  <img id="lightboxImg" src="" alt="">
+</div>
+
+<article>
+  <!-- Hero -->
+  <div class="hero">
+    <h1>SenseNova-U1</h1>
+    <p class="subtitle">原生多模态统一架构开源模型 · NEO-unify</p>
+    <div class="badges">
+      <span class="badge">🏗️ NEO-unify 架构</span>
+      <span class="badge">🧠 MoT 原生推理</span>
+      <span class="badge">📖 图文交错生成</span>
+      <span class="badge">🔓 Apache 2.0</span>
+    </div>
+  </div>
+
+  <!-- Links -->
+  <h2>相关链接</h2>
+  <div class="link-grid">
+    <a class="link-card" href="https://github.com/OpenSenseNova/SenseNova-U1">GitHub 仓库</a>
+    <a class="link-card" href="https://huggingface.co/collections/sensenova/sensenova-u1">HuggingFace 模型</a>
+    <a class="link-card" href="https://modelscope.cn/collections/SenseNova/SenseNova-U1">ModelScope</a>
+    <a class="link-card" href="https://unify.light-ai.top/">在线 Demo</a>
+    <a class="link-card" href="https://discord.gg/cxkwXWjp">Discord 社区</a>
+  </div>
+
+  <!-- Overview -->
+  <h2>概述</h2>
+  <p>🚀 <strong>SenseNova U1</strong> 是全新一代原生多模态模型系列，在单一架构中统一了<strong>多模态理解、推理与生成</strong>。它代表着多模态 AI 的根本性范式转变：<strong>从模态集成走向真正的统一</strong>。SenseNova U1 不再依赖适配器在不同模态之间进行翻译，而是以原生方式跨语言与视觉进行思考与行动。</p>
+
+  <div class="highlight-box">
+    <h3>核心亮点</h3>
+    <ul>
+      <li>🏆 <strong>开源 SoTA</strong> — 理解与生成均达开源最优，比肩商用模型</li>
+      <li>🔗 <strong>NEO-unify 架构</strong> — 彻底摒弃视觉编码器和 VAE，端到端统一建模</li>
+      <li>📖 <strong>原生图文交错生成</strong> — 单一模型单次生成连贯图文内容</li>
+      <li>📰 <strong>高密度信息呈现</strong> — 生成海报、PPT、漫画、简历等复杂内容</li>
+      <li>⚡ <strong>GGUF 量化支持</strong> — 低显存单卡可跑</li>
+    </ul>
+  </div>
+
+  <!-- Architecture -->
+  <h2>核心架构：NEO-unify</h2>
+  <p>SenseNova U1 的核心是 <a href="https://huggingface.co/blog/sensenova/neo-unify">NEO-unify</a>——一个为多模态 AI 从第一性原理设计的全新架构。它<strong>彻底摒弃了视觉编码器（VE）和变分自编码器（VAE）</strong>，因为像素与文字信息在本质上是深度相关的。</p>
+
+  <div class="arch-grid">
+    <div class="arch-card">
+      <div class="icon">🔗</div>
+      <h3>端到端统一</h3>
+      <p>语言与视觉信息统一建模为整体</p>
+    </div>
+    <div class="arch-card">
+      <div class="icon">🖼️</div>
+      <h3>像素级保真</h3>
+      <p>保留语义丰富度的同时维持像素级视觉精度</p>
+    </div>
+    <div class="arch-card">
+      <div class="icon">🧠</div>
+      <h3>原生 MoT</h3>
+      <p>跨模态推理效率高、冲突少</p>
+    </div>
+  </div>
+
+  <!-- Models -->
+  <h2>开源模型库</h2>
+  <p>本次开源为 SenseNova U1 Lite 系列，包含密集主干和 MoE 主干两种规格：</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>模型</th>
+        <th>参数量</th>
+        <th>类型</th>
+        <th>HuggingFace</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>SenseNova-U1-8B-MoT-SFT</td>
+        <td>~8B 理解 + ~8B 生成</td>
+        <td>密集主干</td>
+        <td><a href="https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-SFT">下载</a></td>
+      </tr>
+      <tr>
+        <td>SenseNova-U1-8B-MoT</td>
+        <td>~8B 理解 + ~8B 生成</td>
+        <td>密集主干（+ RL）</td>
+        <td><a href="https://huggingface.co/sensenova/SenseNova-U1-8B-MoT">下载</a></td>
+      </tr>
+      <tr>
+        <td>SenseNova-U1-8B-MoT-LoRA-8step</td>
+        <td>0.4B</td>
+        <td>8步加速 LoRA</td>
+        <td><a href="https://huggingface.co/sensenova/SenseNova-U1-8B-MoT-LoRAs/blob/main/SenseNova-U1-8B-MoT-LoRA-8step-V1.0.safetensors">下载</a></td>
+      </tr>
+      <tr>
+        <td>SenseNova-U1-A3B-MoT-SFT</td>
+        <td>A3B MoE</td>
+        <td>MoE 主干</td>
+        <td><a href="https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT-SFT">下载</a></td>
+      </tr>
+      <tr>
+        <td>SenseNova-U1-A3B-MoT</td>
+        <td>A3B MoE</td>
+        <td>MoE 主干（+ RL）</td>
+        <td><a href="https://huggingface.co/sensenova/SenseNova-U1-A3B-MoT">下载</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="font-size: 0.82rem; color: var(--text-dim); margin-top: 0.5rem;">💡 <code>8B-MoT</code> 指 ~8B 理解参数与 ~8B 生成参数，GGUF 量化版本由社区贡献（<a href="https://huggingface.co/smthem/SenseNova-U1-8B-MoT-Merger-gguf">smthem/SenseNova-U1-8B-MoT-Merger-gguf</a>）。</p>
+
+  <!-- Capabilities -->
+  <h2>能力展示</h2>
+
+  <div class="cap-grid">
+    <div class="cap-pill">
+      <span class="emoji">🖼️</span>
+      <span class="label">文生图</span>
+    </div>
+    <div class="cap-pill">
+      <span class="emoji">✏️</span>
+      <span class="label">图像编辑</span>
+    </div>
+    <div class="cap-pill">
+      <span class="emoji">♻️</span>
+      <span class="label">图文交错生成</span>
+    </div>
+    <div class="cap-pill">
+      <span class="emoji">📝</span>
+      <span class="label">视觉问答 VQA</span>
+    </div>
+  </div>
+
+  <p style="margin-top: 1.5rem;">支持通用场景、<strong>推理型</strong>（带思维链）、信息图等多种生成模式。图像编辑支持因果推理、物理变化、生物变化等复杂任务。</p>
+
+  <!-- Roadmap -->
+  <h2>更新日志 & 路线图</h2>
+
+  <ul class="checklist">
+    <li class="done">
+      <span class="check-box">✓</span>
+      <span>[2026.05.10] 技术报告发布 + A3B-MoT 权重开源</span>
+    </li>
+    <li class="done">
+      <span class="check-box">✓</span>
+      <span>[2026.05.08] GGUF 量化 + 分层 VRAM 模式</span>
+    </li>
+    <li class="done">
+      <span class="check-box">✓</span>
+      <span>[2026.05.06] 8步推理 LoRA 发布</span>
+    </li>
+    <li class="done">
+      <span class="check-box">✓</span>
+      <span>[2026.04.30] 8步推理预览版</span>
+    </li>
+    <li class="done">
+      <span class="check-box">✓</span>
+      <span>[2026.04.27] 首发基础权重 + 推理代码</span>
+    </li>
+    <li class="pending">
+      <span class="check-box"></span>
+      <span>[计划中] 训练代码开源</span>
+    </li>
+  </ul>
+
+  <!-- Footer -->
+  <div class="meta">
+    <p>来源：<a href="https://github.com/OpenSenseNova/SenseNova-U1">GitHub / OpenSenseNova</a></p>
+    <p>归档日期：2026-05-10</p>
+  </div>
+</article>
+
+<script>
+  // Progress bar
+  window.addEventListener('scroll', () => {
+    const bar = document.getElementById('progressBar');
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (scrollTop / docHeight * 100) + '%';
+
+    // Back to top button
+    const btn = document.getElementById('backToTop');
+    btn.classList.toggle('visible', scrollTop > 400);
+  });
+
+  // Lightbox for images
+  document.querySelectorAll('img').forEach(img => {
+    img.style.cursor = 'zoom-in';
+    img.addEventListener('click', () => {
+      const lb = document.getElementById('lightbox');
+      document.getElementById('lightboxImg').src = img.src;
+      lb.classList.add('active');
+    });
+  });
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) this.classList.remove('active');
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') document.getElementById('lightbox').classList.remove('active');
+  });
+</script>
+
+</body>
+</html>
