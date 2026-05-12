@@ -1,5 +1,16 @@
 [
   {
+    "slug": "yao-open-prompts",
+    "title": "姚金刚提示词合集 yao-open-prompts",
+    "desc": "1.8k Star, 116个中文AI提示词，9大分类，含智能元提示词系统、GEO营销实战、内容运营等模板",
+    "tag": "AI",
+    "icon": "💡",
+    "icon_bg": "yellow",
+    "href": "/knowledge-base/raw/articles/yao-open-prompts.html",
+    "asset": null,
+    "has_ppt": false
+  },
+  {
     "slug": "sensenova-u1",
     "title": "SenseNova-U1 原生多模态统一架构开源模型",
     "desc": "OpenSenseNova发布的原生多模态大模型，基于NEO-unify架构，在单一架构中统一多模态理解、推理与生成",
@@ -62,17 +73,6 @@
     "icon": "💡",
     "icon_bg": "blue",
     "href": "/knowledge-base/raw/articles/worldmodel-meta.html",
-    "asset": null,
-    "has_ppt": false
-  },
-  {
-    "slug": "yao-open-prompts",
-    "title": "姚金刚提示词合集 yao-open-prompts",
-    "desc": "1.8k Star, 116个中文AI提示词，9大分类，含智能元提示词系统、GEO营销实战、内容运营等模板",
-    "tag": "AI",
-    "icon": "💡",
-    "icon_bg": "yellow",
-    "href": "/knowledge-base/raw/articles/yao-open-prompts.html",
     "asset": null,
     "has_ppt": false
   }
