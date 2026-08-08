@@ -140,10 +140,10 @@ INFO:     Application startup complete.
 
 同时，FastAPI 自动生成了交互式 API 文档：
 
-| 地址 | 文档类型 | 说明 |
-| --- | --- | --- |
-| **http://127.0.0.1:8000/docs** | Swagger UI | 可交互测试 API 的文档界面 |
-| **http://127.0.0.1:8000/redoc** | ReDoc | 更注重阅读体验的文档界面 |
+| 地址                              | 文档类型       | 说明                                       |
+| ------------------------------- | ---------- | ---------------------------------------- |
+| **http://127.0.0.1:8000/docs**  | Swagger UI | 可交互测试 API 的文档界面                          |
+| **http://127.0.0.1:8000/redoc** | ReDoc      | 更注重阅读体验的文档界面，但**在没有外网访问 CDN 的条件下可能无法显示** |
 
 ---
 
@@ -153,10 +153,10 @@ FastAPI 新版本提供了 fastapi 命令行工具，可以更方便地运行应
 
 ```
 # 开发模式（自动重载）
-$ fastapi dev
+$ python -m fastapi dev
 
 # 生产模式
-$ fastapi run
+$ python -m fastapi run
 ```
 
 `fastapi dev` 会自动查找项目中的 FastAPI 应用并启动开发服务器，等同于 `uvicorn main:app --reload` 。
